@@ -22,6 +22,9 @@ public class OrderMapper {
                 .customerId(order.getCustomerId())
                 .productId(order.getProductId())
                 .quantity(order.getQuantity())
+                .totalAmount(order.getTotalAmount())
+                .status(order.getStatus())
+                .createdAt(order.getCreatedAt())
                 .build();
     }
 }

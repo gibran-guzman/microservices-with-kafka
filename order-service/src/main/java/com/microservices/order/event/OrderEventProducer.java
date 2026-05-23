@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -18,14 +20,12 @@ public class OrderEventProducer {
 
     public void publish(OrderEvent event) {
         log.info("Publicando evento de pedido en topic {}: {}", topic, event);
-        kafkaTemplate.send(topic, event)
-                .whenComplete((result, ex) -> {
-                    if (ex == null) {
-                        log.info("Evento de pedido publicado exitosamente. Offset: {}",
-                                result.getRecordMetadata().offset());
-                    } else {
-                        log.error("Error al publicar evento de pedido: {}", ex.getMessage(), ex);
-                    }
-                });
+        try {
+            kafkaTemplate.send(topic, event).get(10, TimeUnit.SECONDS);
+            log.info("Evento de pedido publicado exitosamente");
+        } catch (Exception e) {
+            log.error("Error al publicar evento de pedido: {}", e.getMessage(), e);
+            throw new RuntimeException("Error al publicar evento en Kafka", e);
+        }
     }
 }
