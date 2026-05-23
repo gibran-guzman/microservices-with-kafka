@@ -9,6 +9,9 @@ import com.microservices.customer.mapper.CustomerMapper;
 import com.microservices.customer.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,13 +30,13 @@ public class CustomerService {
     public CustomerResponse create(CustomerRequest request) {
         log.info("Creando cliente con correo: {}", request.getEmail());
 
-        if (repository.existsByEmail(request.getEmail())) {
+        Customer customer = mapper.toEntity(request);
+        try {
+            customer = repository.save(customer);
+        } catch (DataIntegrityViolationException e) {
             throw new DuplicateResourceException(
                     "Ya existe un cliente con el correo: " + request.getEmail());
         }
-
-        Customer customer = mapper.toEntity(request);
-        customer = repository.save(customer);
 
         log.info("Cliente creado exitosamente con id: {}", customer.getId());
         return mapper.toResponse(customer);
@@ -46,6 +49,12 @@ public class CustomerService {
                 .stream()
                 .map(mapper::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<CustomerResponse> findAll(Pageable pageable) {
+        log.info("Consultando clientes paginados: {}", pageable);
+        return repository.findAll(pageable).map(mapper::toResponse);
     }
 
     @Transactional(readOnly = true)
@@ -63,14 +72,14 @@ public class CustomerService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Cliente no encontrado con id: " + id));
 
-        if (!customer.getEmail().equals(request.getEmail())
-                && repository.existsByEmail(request.getEmail())) {
+        boolean emailChanged = !customer.getEmail().equals(request.getEmail());
+        mapper.updateEntity(customer, request);
+        try {
+            customer = repository.save(customer);
+        } catch (DataIntegrityViolationException e) {
             throw new DuplicateResourceException(
                     "Ya existe un cliente con el correo: " + request.getEmail());
         }
-
-        mapper.updateEntity(customer, request);
-        customer = repository.save(customer);
 
         log.info("Cliente actualizado exitosamente con id: {}", id);
         return mapper.toResponse(customer);
@@ -78,11 +87,10 @@ public class CustomerService {
 
     public void delete(Long id) {
         log.info("Eliminando cliente con id: {}", id);
-        if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException(
-                    "Cliente no encontrado con id: " + id);
-        }
-        repository.deleteById(id);
+        Customer customer = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Cliente no encontrado con id: " + id));
+        repository.delete(customer);
         log.info("Cliente eliminado exitosamente con id: {}", id);
     }
 }
