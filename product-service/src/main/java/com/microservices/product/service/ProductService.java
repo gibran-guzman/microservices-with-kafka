@@ -9,6 +9,9 @@ import com.microservices.product.mapper.ProductMapper;
 import com.microservices.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,13 +30,13 @@ public class ProductService {
     public ProductResponse create(ProductRequest request) {
         log.info("Creando producto con nombre: {}", request.getName());
 
-        if (repository.existsByName(request.getName())) {
+        Product product = mapper.toEntity(request);
+        try {
+            product = repository.save(product);
+        } catch (DataIntegrityViolationException e) {
             throw new DuplicateResourceException(
                     "Ya existe un producto con el nombre: " + request.getName());
         }
-
-        Product product = mapper.toEntity(request);
-        product = repository.save(product);
 
         log.info("Producto creado exitosamente con id: {}", product.getId());
         return mapper.toResponse(product);
@@ -46,6 +49,12 @@ public class ProductService {
                 .stream()
                 .map(mapper::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ProductResponse> findAll(Pageable pageable) {
+        log.info("Consultando productos paginados: {}", pageable);
+        return repository.findAll(pageable).map(mapper::toResponse);
     }
 
     @Transactional(readOnly = true)
@@ -63,14 +72,13 @@ public class ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Producto no encontrado con id: " + id));
 
-        if (!product.getName().equals(request.getName())
-                && repository.existsByName(request.getName())) {
+        mapper.updateEntity(product, request);
+        try {
+            product = repository.save(product);
+        } catch (DataIntegrityViolationException e) {
             throw new DuplicateResourceException(
                     "Ya existe un producto con el nombre: " + request.getName());
         }
-
-        mapper.updateEntity(product, request);
-        product = repository.save(product);
 
         log.info("Producto actualizado exitosamente con id: {}", id);
         return mapper.toResponse(product);
@@ -78,11 +86,10 @@ public class ProductService {
 
     public void delete(Long id) {
         log.info("Eliminando producto con id: {}", id);
-        if (!repository.existsById(id)) {
-            throw new ResourceNotFoundException(
-                    "Producto no encontrado con id: " + id);
-        }
-        repository.deleteById(id);
+        Product product = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Producto no encontrado con id: " + id));
+        repository.delete(product);
         log.info("Producto eliminado exitosamente con id: {}", id);
     }
 }
