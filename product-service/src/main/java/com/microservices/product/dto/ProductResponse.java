@@ -1,5 +1,6 @@
 package com.microservices.product.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +15,13 @@ import java.math.BigDecimal;
 public class ProductResponse {
 
     private Long id;
-    private String nombre;
-    private BigDecimal precio;
+
+    @JsonProperty("nombre")
+    private String name;
+
+    @JsonProperty("precio")
+    private BigDecimal price;
+
+    @JsonProperty("stock")
     private Integer stock;
 }

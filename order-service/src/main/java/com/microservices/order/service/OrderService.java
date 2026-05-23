@@ -1,11 +1,11 @@
 package com.microservices.order.service;
 
+import com.microservices.common.exception.ResourceNotFoundException;
 import com.microservices.order.dto.OrderRequest;
 import com.microservices.order.dto.OrderResponse;
 import com.microservices.order.entity.Order;
 import com.microservices.order.event.OrderEvent;
 import com.microservices.order.event.OrderEventProducer;
-import com.microservices.order.exception.ResourceNotFoundException;
 import com.microservices.order.mapper.OrderMapper;
 import com.microservices.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +28,8 @@ public class OrderService {
     private final OrderEventProducer eventProducer;
 
     public OrderResponse create(OrderRequest request) {
-        log.info("Creando pedido para clienteId: {}, productoId: {}",
-                request.getClienteId(), request.getProductoId());
+        log.info("Creando pedido para customerId: {}, productId: {}",
+                request.getCustomerId(), request.getProductId());
 
         Order order = mapper.toEntity(request);
         order = repository.save(order);

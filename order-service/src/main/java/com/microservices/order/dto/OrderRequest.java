@@ -1,5 +1,6 @@
 package com.microservices.order.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -13,12 +14,15 @@ import lombok.NoArgsConstructor;
 @Builder
 public class OrderRequest {
 
+    @JsonProperty("clienteId")
     @NotNull(message = "El ID del cliente es obligatorio")
-    private Long clienteId;
+    private Long customerId;
 
+    @JsonProperty("productoId")
     @NotNull(message = "El ID del producto es obligatorio")
-    private Long productoId;
+    private Long productId;
 
+    @JsonProperty("cantidad")
     @Positive(message = "La cantidad debe ser mayor a cero")
-    private int cantidad;
+    private int quantity;
 }

@@ -10,21 +10,21 @@ public class CustomerMapper {
 
     public Customer toEntity(CustomerRequest request) {
         return Customer.builder()
-                .name(request.getNombre())
-                .email(request.getCorreo())
+                .name(request.getName())
+                .email(request.getEmail())
                 .build();
     }
 
     public CustomerResponse toResponse(Customer customer) {
         return CustomerResponse.builder()
                 .id(customer.getId())
-                .nombre(customer.getName())
-                .correo(customer.getEmail())
+                .name(customer.getName())
+                .email(customer.getEmail())
                 .build();
     }
 
     public void updateEntity(Customer customer, CustomerRequest request) {
-        customer.setName(request.getNombre());
-        customer.setEmail(request.getCorreo());
+        customer.setName(request.getName());
+        customer.setEmail(request.getEmail());
     }
 }

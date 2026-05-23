@@ -20,6 +20,7 @@
     <description>Mini arquitectura empresarial con microservicios, Eureka, Gateway y Kafka</description>
 
     <modules>
+        <module>common-lib</module>
         <module>eureka-server</module>
         <module>gateway-server</module>
         <module>customer-service</module>

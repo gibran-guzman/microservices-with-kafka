@@ -1,10 +1,10 @@
 package com.microservices.customer.service;
 
+import com.microservices.common.exception.DuplicateResourceException;
+import com.microservices.common.exception.ResourceNotFoundException;
 import com.microservices.customer.dto.CustomerRequest;
 import com.microservices.customer.dto.CustomerResponse;
 import com.microservices.customer.entity.Customer;
-import com.microservices.customer.exception.DuplicateResourceException;
-import com.microservices.customer.exception.ResourceNotFoundException;
 import com.microservices.customer.mapper.CustomerMapper;
 import com.microservices.customer.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +25,11 @@ public class CustomerService {
     private final CustomerMapper mapper;
 
     public CustomerResponse create(CustomerRequest request) {
-        log.info("Creando cliente con correo: {}", request.getCorreo());
+        log.info("Creando cliente con correo: {}", request.getEmail());
 
-        if (repository.existsByEmail(request.getCorreo())) {
+        if (repository.existsByEmail(request.getEmail())) {
             throw new DuplicateResourceException(
-                    "Ya existe un cliente con el correo: " + request.getCorreo());
+                    "Ya existe un cliente con el correo: " + request.getEmail());
         }
 
         Customer customer = mapper.toEntity(request);
@@ -63,10 +63,10 @@ public class CustomerService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Cliente no encontrado con id: " + id));
 
-        if (!customer.getEmail().equals(request.getCorreo())
-                && repository.existsByEmail(request.getCorreo())) {
+        if (!customer.getEmail().equals(request.getEmail())
+                && repository.existsByEmail(request.getEmail())) {
             throw new DuplicateResourceException(
-                    "Ya existe un cliente con el correo: " + request.getCorreo());
+                    "Ya existe un cliente con el correo: " + request.getEmail());
         }
 
         mapper.updateEntity(customer, request);

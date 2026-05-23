@@ -1,10 +1,10 @@
 package com.microservices.product.service;
 
+import com.microservices.common.exception.DuplicateResourceException;
+import com.microservices.common.exception.ResourceNotFoundException;
 import com.microservices.product.dto.ProductRequest;
 import com.microservices.product.dto.ProductResponse;
 import com.microservices.product.entity.Product;
-import com.microservices.product.exception.DuplicateResourceException;
-import com.microservices.product.exception.ResourceNotFoundException;
 import com.microservices.product.mapper.ProductMapper;
 import com.microservices.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +25,11 @@ public class ProductService {
     private final ProductMapper mapper;
 
     public ProductResponse create(ProductRequest request) {
-        log.info("Creando producto con nombre: {}", request.getNombre());
+        log.info("Creando producto con nombre: {}", request.getName());
 
-        if (repository.existsByName(request.getNombre())) {
+        if (repository.existsByName(request.getName())) {
             throw new DuplicateResourceException(
-                    "Ya existe un producto con el nombre: " + request.getNombre());
+                    "Ya existe un producto con el nombre: " + request.getName());
         }
 
         Product product = mapper.toEntity(request);
@@ -63,10 +63,10 @@ public class ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Producto no encontrado con id: " + id));
 
-        if (!product.getName().equals(request.getNombre())
-                && repository.existsByName(request.getNombre())) {
+        if (!product.getName().equals(request.getName())
+                && repository.existsByName(request.getName())) {
             throw new DuplicateResourceException(
-                    "Ya existe un producto con el nombre: " + request.getNombre());
+                    "Ya existe un producto con el nombre: " + request.getName());
         }
 
         mapper.updateEntity(product, request);

@@ -1,5 +1,6 @@
 package com.microservices.order.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,12 +24,15 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonProperty("clienteId")
     @Column(name = "customer_id", nullable = false)
     private Long customerId;
 
+    @JsonProperty("productoId")
     @Column(name = "product_id", nullable = false)
     private Long productId;
 
+    @JsonProperty("cantidad")
     @Column(name = "quantity", nullable = false)
     private Integer quantity;
 }

@@ -1,4 +1,4 @@
-package com.microservices.product.exception;
+package com.microservices.common.exception;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

@@ -1,5 +1,6 @@
 package com.microservices.customer.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,9 +24,11 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonProperty("nombre")
     @Column(name = "name", nullable = false)
     private String name;
 
+    @JsonProperty("correo")
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 }

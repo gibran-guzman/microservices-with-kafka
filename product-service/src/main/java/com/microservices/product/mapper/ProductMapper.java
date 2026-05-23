@@ -10,8 +10,8 @@ public class ProductMapper {
 
     public Product toEntity(ProductRequest request) {
         return Product.builder()
-                .name(request.getNombre())
-                .price(request.getPrecio())
+                .name(request.getName())
+                .price(request.getPrice())
                 .stock(request.getStock())
                 .build();
     }
@@ -19,15 +19,15 @@ public class ProductMapper {
     public ProductResponse toResponse(Product product) {
         return ProductResponse.builder()
                 .id(product.getId())
-                .nombre(product.getName())
-                .precio(product.getPrice())
+                .name(product.getName())
+                .price(product.getPrice())
                 .stock(product.getStock())
                 .build();
     }
 
     public void updateEntity(Product product, ProductRequest request) {
-        product.setName(request.getNombre());
-        product.setPrice(request.getPrecio());
+        product.setName(request.getName());
+        product.setPrice(request.getPrice());
         product.setStock(request.getStock());
     }
 }

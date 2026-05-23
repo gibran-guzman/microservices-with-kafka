@@ -10,18 +10,18 @@ public class OrderMapper {
 
     public Order toEntity(OrderRequest request) {
         return Order.builder()
-                .customerId(request.getClienteId())
-                .productId(request.getProductoId())
-                .quantity(request.getCantidad())
+                .customerId(request.getCustomerId())
+                .productId(request.getProductId())
+                .quantity(request.getQuantity())
                 .build();
     }
 
     public OrderResponse toResponse(Order order) {
         return OrderResponse.builder()
                 .id(order.getId())
-                .clienteId(order.getCustomerId())
-                .productoId(order.getProductId())
-                .cantidad(order.getQuantity())
+                .customerId(order.getCustomerId())
+                .productId(order.getProductId())
+                .quantity(order.getQuantity())
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.microservices.product.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,12 +26,15 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonProperty("nombre")
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
+    @JsonProperty("precio")
     @Column(name = "price", nullable = false)
     private BigDecimal price;
 
+    @JsonProperty("stock")
     @Column(name = "stock", nullable = false)
     private Integer stock;
 }

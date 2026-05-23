@@ -1,5 +1,6 @@
 package com.microservices.customer.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +13,10 @@ import lombok.NoArgsConstructor;
 public class CustomerResponse {
 
     private Long id;
-    private String nombre;
-    private String correo;
+
+    @JsonProperty("nombre")
+    private String name;
+
+    @JsonProperty("correo")
+    private String email;
 }
