@@ -48,6 +48,8 @@ public class OrderService {
         order.setCreatedAt(LocalDateTime.now());
         order = repository.save(order);
 
+        decrementStock(request.getProductId(), request.getQuantity());
+
         OrderEvent event = OrderEvent.builder()
                 .orderId(order.getId())
                 .customerId(order.getCustomerId())
@@ -148,6 +150,22 @@ public class OrderService {
             throw new IllegalArgumentException(
                     "Stock insuficiente. Disponible: " + availableStock +
                     ", solicitado: " + requestedQuantity);
+        }
+    }
+
+    private void decrementStock(Long productId, int quantity) {
+        RestClient client = restClientBuilder.build();
+        try {
+            Map<String, Object> body = Map.of("cantidad", quantity);
+            client.patch()
+                    .uri("http://PRODUCT-SERVICE/productos/{id}/stock", productId)
+                    .body(body)
+                    .retrieve()
+                    .toBodilessEntity();
+            log.info("Stock actualizado para producto: {}", productId);
+        } catch (Exception e) {
+            log.error("Error actualizando stock para producto {}: {}", productId, e.getMessage());
+            throw new RuntimeException("Error al actualizar stock del producto: " + productId, e);
         }
     }
 }

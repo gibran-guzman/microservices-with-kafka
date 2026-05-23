@@ -2,6 +2,7 @@ package com.microservices.product.controller;
 
 import com.microservices.product.dto.ProductRequest;
 import com.microservices.product.dto.ProductResponse;
+import com.microservices.product.dto.StockUpdateRequest;
 import com.microservices.product.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -52,6 +54,14 @@ public class ProductController {
             @Valid @RequestBody ProductRequest request) {
         ProductResponse response = service.update(id, request);
         return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{id}/stock")
+    public ResponseEntity<Void> decrementStock(
+            @PathVariable Long id,
+            @Valid @RequestBody StockUpdateRequest request) {
+        service.decrementStock(id, request.getQuantity());
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")

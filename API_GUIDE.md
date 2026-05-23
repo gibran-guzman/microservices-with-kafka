@@ -1,8 +1,8 @@
 # API Guide
 
-Base URL: `http://localhost:8088/api`
+Base URL: `http://localhost:8089/api`
 
-Gateway expone los servicios en el puerto **8088** del host (mapea a 8080 del contenedor). Todos los endpoints requieren `Content-Type: application/json`.
+Gateway expone los servicios en el puerto **8089** del host (mapea a 8080 del contenedor). Todos los endpoints requieren `Content-Type: application/json`.
 
 ---
 
@@ -296,17 +296,17 @@ Eliminar un pedido.
 
 ```bash
 # 1. Crear cliente
-curl -s -X POST http://localhost:8088/api/clientes \
+curl -s -X POST http://localhost:8089/api/clientes \
   -H "Content-Type: application/json" \
   -d '{"nombre":"Ana López","correo":"ana@example.com"}'
 
 # 2. Crear producto
-curl -s -X POST http://localhost:8088/api/productos \
+curl -s -X POST http://localhost:8089/api/productos \
   -H "Content-Type: application/json" \
   -d '{"nombre":"Monitor 4K","precio":800.00,"stock":5}'
 
 # 3. Crear pedido (reemplazar IDs con los obtenidos arriba)
-curl -s -X POST http://localhost:8088/api/pedidos \
+curl -s -X POST http://localhost:8089/api/pedidos \
   -H "Content-Type: application/json" \
   -d '{"clienteId":1,"productoId":1,"cantidad":2}'
 
@@ -361,7 +361,7 @@ Errores de validación incluyen `fieldErrors`:
 |-----|-----------|
 | `http://localhost:8761` | Dashboard Eureka (servicios registrados) |
 | `http://localhost:8090` | Kafka UI (topics, mensajes, consumers, offsets) |
-| `http://localhost:8088/actuator/health` | Health check del Gateway |
+| `http://localhost:8089/actuator/health` | Health check del Gateway |
 | `http://localhost:8081/actuator/health` | Health check customer-service (directo) |
 | `http://localhost:8082/actuator/health` | Health check product-service (directo) |
 | `http://localhost:8083/actuator/health` | Health check order-service (directo) |

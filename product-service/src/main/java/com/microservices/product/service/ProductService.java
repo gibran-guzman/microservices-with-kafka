@@ -84,6 +84,21 @@ public class ProductService {
         return mapper.toResponse(product);
     }
 
+    public void decrementStock(Long id, int quantity) {
+        log.info("Descontando {} unidades del stock del producto: {}", quantity, id);
+        Product product = repository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Producto no encontrado con id: " + id));
+        if (product.getStock() < quantity) {
+            throw new IllegalArgumentException(
+                    "Stock insuficiente. Disponible: " + product.getStock() +
+                    ", solicitado: " + quantity);
+        }
+        product.setStock(product.getStock() - quantity);
+        repository.save(product);
+        log.info("Stock actualizado exitosamente para producto: {}", id);
+    }
+
     public void delete(Long id) {
         log.info("Eliminando producto con id: {}", id);
         Product product = repository.findById(id)

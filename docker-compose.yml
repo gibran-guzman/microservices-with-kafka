@@ -60,7 +60,7 @@ services:
       context: ./gateway-server
     container_name: gateway-server
     ports:
-      - "8088:8080"
+      - "8089:8080"
     environment:
       SPRING_PROFILES_ACTIVE: docker
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/

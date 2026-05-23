@@ -5,7 +5,7 @@
 ```mermaid
 graph TB
     subgraph Cliente["🌐 Cliente Externo"]
-        HTTP[("HTTP :8088")]
+        HTTP[("HTTP :8089")]
     end
 
     subgraph Discovery["🔍 Service Discovery"]
@@ -13,7 +13,7 @@ graph TB
     end
 
     subgraph Gateway["🚪 API Gateway"]
-        GW[("Gateway Server<br/>:8088 → :8080")]
+        GW[("Gateway Server<br/>:8089 → :8080")]
     end
 
     subgraph Clientes["👤 Customer Service"]
@@ -82,7 +82,7 @@ graph TB
 ```mermaid
 sequenceDiagram
     participant C as Cliente
-    participant GW as Gateway (:8088)
+    participant GW as Gateway (:8089)
     participant OS as Order Service
     participant CS as Customer Service
     participant PS as Product Service
@@ -192,7 +192,7 @@ graph TB
 
         subgraph Services["Microservicios (Spring Boot 3.2.5)"]
             EUREKA[Eureka Server<br/>:8761]
-            GW[Gateway Server<br/>:8088 ← :8080]
+            GW[Gateway Server<br/>:8089 ← :8080]
             CS[Customer Service<br/>:8081]
             PS[Product Service<br/>:8082]
             OS[Order Service<br/>:8083]

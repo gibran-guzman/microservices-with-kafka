@@ -49,19 +49,19 @@ Tiempo estimado: 2-5 minutos (depende de la descarga de imágenes Docker).
 
 ```bash
 # Crear cliente
-CLIENTE=$(curl -s -X POST http://localhost:8088/api/clientes \
+CLIENTE=$(curl -s -X POST http://localhost:8089/api/clientes \
   -H "Content-Type: application/json" \
   -d '{"nombre":"Juan Pérez","correo":"juan@example.com"}' | jq -r '.id')
 echo "Cliente ID: $CLIENTE"
 
 # Crear producto
-PRODUCTO=$(curl -s -X POST http://localhost:8088/api/productos \
+PRODUCTO=$(curl -s -X POST http://localhost:8089/api/productos \
   -H "Content-Type: application/json" \
   -d '{"nombre":"Laptop Gamer","precio":1500.00,"stock":10}' | jq -r '.id')
 echo "Producto ID: $PRODUCTO"
 
 # Crear pedido (dispara evento Kafka)
-PEDIDO=$(curl -s -X POST http://localhost:8088/api/pedidos \
+PEDIDO=$(curl -s -X POST http://localhost:8089/api/pedidos \
   -H "Content-Type: application/json" \
   -d "{\"clienteId\":$CLIENTE,\"productoId\":$PRODUCTO,\"cantidad\":2}" | jq .)
 echo "Pedido creado: $PEDIDO"
@@ -83,7 +83,7 @@ microservices-with-kafka/
 │   └── src/main/java/.../exception/     # ErrorResponse, GlobalExceptionHandler,
 │                                        # ResourceNotFoundException, DuplicateResourceException
 ├── eureka-server/                       # Service Discovery (Netflix Eureka, puerto 8761)
-├── gateway-server/                      # API Gateway (Spring Cloud Gateway, puerto 8088)
+├── gateway-server/                      # API Gateway (Spring Cloud Gateway, puerto 8089)
 │   └── src/main/java/.../config/        # CorsConfig
 ├── customer-service/                    # CRUD de clientes (puerto 8081)
 │   └── src/main/java/.../customer/      # controller/ service/ repository/ entity/ dto/ mapper/
@@ -148,7 +148,7 @@ Cobertura: capa de servicio con Mockito, incluyendo casos de éxito, validación
 
 | Servicio | Puerto (host → container) |
 |----------|---------------------------|
-| Gateway | 8088 → 8080 |
+| Gateway | 8089 → 8080 |
 | Eureka Server | 8761 |
 | customer-service | 8081 |
 | product-service | 8082 |
