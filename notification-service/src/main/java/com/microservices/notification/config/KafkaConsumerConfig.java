@@ -32,7 +32,7 @@ public class KafkaConsumerConfig {
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         config.put(JsonDeserializer.TRUSTED_PACKAGES, "com.microservices.notification.event");
-        config.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.microservices.notification.event.OrderEvent");
+        config.put(JsonDeserializer.TYPE_MAPPINGS, "orderEvent:com.microservices.notification.event.OrderEvent");
         return new DefaultKafkaConsumerFactory<>(config);
     }
 
